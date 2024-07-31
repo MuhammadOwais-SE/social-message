@@ -6,7 +6,7 @@ type connectionObject = {
 
 const connection: connectionObject = {}
 
-console.log(connection)
+console.log("Connection object:", connection)
 
 async function dbConnect(): Promise<void>{
     // if database is already connected then do not try to connect again. It will create choking
@@ -18,6 +18,10 @@ async function dbConnect(): Promise<void>{
     try{
         const db = await mongoose.connect( process.env.MONGODB_URI || '',{})
         console.log("Successfully connected to database.");
+        // to show the state that the database is connected.
+        connection.isConnected = db.connections[0].      
+        readyState    
+        console.log("DB connected successfully")
     }
     catch(error){
         console.log(error);
@@ -25,4 +29,4 @@ async function dbConnect(): Promise<void>{
     }
 } 
 
-export default dbConnect();
+export default dbConnect;
