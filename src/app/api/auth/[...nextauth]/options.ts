@@ -55,7 +55,7 @@ export  const authOptions: NextAuthOptions = {
         strategy: 'jwt'
     },
     secret: process.env.NEXTAUTH_SECRET,
-
+    //  we create callbacks to avoid request from database to avoid chocking it.
     callbacks: {
         // strategy we will try to get every field from our token
         async session({ session, token}) {
