@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+// import dotenv from 'dotenv';
 
 type connectionObject = {
     isConnected? : number
@@ -12,7 +13,7 @@ async function dbConnect(): Promise<void>{
     // if database is already connected then do not try to connect again. It will create choking
     if(connection.isConnected){
         console.log("Connection is already established")
-        return
+        return;
     }
 
     try{

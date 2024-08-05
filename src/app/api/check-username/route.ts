@@ -30,7 +30,20 @@ export async function GET(request: Request){
 
         }
     //   start 19:49 video
+    const {username} = result.data;
+    const existingVerifyUser = await userModel.findOne({username, isVerify: true}) 
 
+    if(existingVerifyUser){
+        return Response.json({
+            success: false,
+            message: "Username name already taken"
+        },{status: 400})
+    }else{
+        return Response.json({
+            success: true,
+            message: "Username is unique"
+        }, {status: 100})
+    }
 
     } catch (error) {
         console.log("Error checking username: ", error);
