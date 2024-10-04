@@ -6,20 +6,22 @@ import {usernameValid} from "@/schema/signUpSchema";
 const UsernameQuerySchema = z.object({
     username : usernameValid
 });
-
+// study by debounce technique
 export async function GET(request: Request){
     await dbConnect();
 
     try {
         // to need to extract the value from the query parameter(A URL WITH key and value)
+        // e.g /api/check-username?username=owais?phone=andriod
         const {searchParams} = new URL(request.url)
-        // making object which extract the username
+        // because of zod syntax we need to make object which extract the username not a variable
         const queryParam = {
-            username: searchParams.get('username')
+            username: searchParams.get('username') // note we getting the value through the object
         }
         // validation with zod
+        // we write safeParse if schema is follow we will get the value
         const result = UsernameQuerySchema.safeParse(queryParam);  
-        console.log(result);
+        console.log(result); // we get alot of things from it
 
         if(!result.success){
            const usernameErrors = result.error.format().username?._errors || []
@@ -46,14 +48,11 @@ export async function GET(request: Request){
     }
 
     } catch (error) {
-        console.log("Error checking username: ", error);
-        return Response.json(
-            {
-                success: false,
-                message: "Error checking username",
-            },
-            {status: 500}
-        )
-        
+        console.log("Error checking username: ",error);
+        return Response.json({
+            success: false,
+            message:"Error checking username"
+        },
+        {status: 500})
     }
 }

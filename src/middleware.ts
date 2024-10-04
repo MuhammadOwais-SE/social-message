@@ -7,7 +7,8 @@ export { default } from "next-auth/middleware"
 export async function middleware(request: NextRequest) {
   const token = await getToken({req: request})
   const url = request.nextUrl
-    if (token && 
+  // Check if the user is not authenticated and is trying to access protected pages
+    if (!token && 
         (
             url.pathname.startsWith('/sign-in') ||
             url.pathname.startsWith('/login-in') ||

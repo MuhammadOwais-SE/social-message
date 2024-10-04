@@ -9,7 +9,7 @@ export  const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
           id:"credentails",
-          name: "login in",
+          name: "login",
           // `credentials` is used to generate a form on the sign in page.
           // You can specify which fields should be submitted, by adding keys to the `credentials` object.
           // e.g. domain, username, password, 2FA token, etc.
@@ -67,7 +67,7 @@ export  const authOptions: NextAuthOptions = {
             }
           return session
         },
-        async jwt({ token, user, }) {
+        async jwt({ token, user}) {
             token.id = user._id?.toString()
             token.isVerify = user.isVerify
             token.isAcceptingMessages = user.isAcceptingMessages

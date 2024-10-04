@@ -6,7 +6,6 @@ import sendEmailVerification from "@/helper/sendEmailVerification"
 
 export async function POST(request: Request){
     await dbConnect();
-   
     try{
         //  to see if the user exist or not
         const { username, email, password} = await request.json();
@@ -15,12 +14,16 @@ export async function POST(request: Request){
             isVerified: true
         })
 
-        if (existingUserVerifiedByUserName){
-            return Response.json({   
+        if (existingUserVerifiedByUserName) {
+            return new Response(
+              JSON.stringify({
                 success: false,
-                message:"username already exist"
-            }, {status: 400})
-            }
+                message: "Username already exists",
+              }),
+              { status: 400 }
+            );
+          }
+            
 
         const existingUserByEmail = await UserModel.findOne({
             email,
@@ -42,10 +45,10 @@ export async function POST(request: Request){
             }
         }else{
             const hasedPassword = await bcrypt.hash(password, 10); // for security. It save password in hash formate in database
-             const expiryDate = new Date(); // This creates a new Date object representing the current date and time
-             expiryDate.setHours(expiryDate.getHours()+1); // This method sets the hour of the Date object to the specified value, which is the current hour plus one. As a result, expiryDate now represents a time exactly one hour in the future from the original time.
+            const expiryDate = new Date(); // This creates a new Date object representing the current date and time
+            expiryDate.setHours(expiryDate.getHours()+1); // This method sets the hour of the Date object to the specified value, which is the current hour plus one. As a result, expiryDate now represents a time exactly one hour in the future from the original time.
         
-        new UserModel({
+        const newUser = new UserModel({
             username,
             email,
             password: hasedPassword,
@@ -55,9 +58,11 @@ export async function POST(request: Request){
             isAcceptingMsg: true,
             messages: []
         })
+        await newUser.save();
+
         }
             
-        // send verification email
+        // sending verification email
         const emailResponse = await sendEmailVerification(
             email, 
             username,
